@@ -83,3 +83,11 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/dash', methods=['GET', 'POST'])
+@login_required
+def dash():
+    return render_template('dash.html', title='Dashboard')
+
+
+
