@@ -8,8 +8,8 @@
 
 <div class="container">
     <h2>Customer</h2>
-    <p><a class="btn btn-default" href="http://flask.pocoo.org/docs/">Add Customer &raquo;</a></p>
-    <p><a class="btn btn-default" href="http://flask.pocoo.org/docs/">View Customer &raquo;</a></p>
+    <p><a class="btn btn-default" href="{{ url_for('add_customer') }}">Add Customer &raquo;</a></p>
+    <p><a class="btn btn-default" href="{{ url_for('view_all_customers') }}">View Customers &raquo;</a></p>
 </div>
 
 <div class="container">

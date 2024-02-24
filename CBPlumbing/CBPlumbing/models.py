@@ -26,6 +26,19 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
     
 
+class Customer(db.Model): 
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    first_name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
+    last_name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
+    phone: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
+    email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    first_line_address: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    second_line_address: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    city: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    county: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    postal_code: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    
+
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))

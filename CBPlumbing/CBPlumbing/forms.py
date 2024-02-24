@@ -32,3 +32,15 @@ class RegistrationForm(FlaskForm):
             User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email address.')
+        
+class AddCustomerForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    phone = StringField('Phone', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    first_line_address = StringField('First Line Address', validators=[DataRequired()])
+    second_line_address = StringField('Second Line Address')
+    city = StringField('City', validators=[DataRequired()])
+    county = StringField('County', validators=[DataRequired()])
+    postal_code = StringField('Postal Code', validators=[DataRequired()])
+    submit = SubmitField('Add Customer')

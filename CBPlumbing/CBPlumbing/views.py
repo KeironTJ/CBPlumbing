@@ -10,8 +10,8 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from CBPlumbing import app, db
-from CBPlumbing.forms import LoginForm, RegistrationForm
-from CBPlumbing.models import User
+from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm
+from CBPlumbing.models import User, Customer
 
 
 @app.route('/')
@@ -59,7 +59,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('index')
+            next_page = url_for('dash')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
@@ -88,6 +88,24 @@ def register():
 @login_required
 def dash():
     return render_template('dash.html', title='Dashboard')
+
+@app.route('/add_customer', methods=['GET', 'POST'])
+@login_required
+def add_customer():
+    form=AddCustomerForm()
+    if form.validate_on_submit():
+        customer = Customer(first_name=form.first_name.data, last_name=form.last_name.data, phone=form.phone.data, email=form.email.data, first_line_address=form.first_line_address.data, second_line_address=form.second_line_address.data, city=form.city.data, county=form.county.data, postal_code=form.postal_code.data)
+        db.session.add(customer)
+        db.session.commit()
+        flash('Customer added successfully!')
+        return redirect(url_for('dash'))
+    return render_template('add_customer.html', title='Add Customer', form=form)
+
+@app.route('/view_all_customers', methods=['GET', 'POST'])
+@login_required
+def view_all_customers():
+    customers = db.session.query(Customer).all()
+    return render_template('view_all_customers.html', title='View Customers', customers=customers)
 
 
 
