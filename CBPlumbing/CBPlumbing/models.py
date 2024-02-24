@@ -37,6 +37,7 @@ class Customer(db.Model):
     city: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     county: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     postal_code: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    referal: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     
 
 @login.user_loader

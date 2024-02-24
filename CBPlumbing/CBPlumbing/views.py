@@ -94,18 +94,35 @@ def dash():
 def add_customer():
     form=AddCustomerForm()
     if form.validate_on_submit():
-        customer = Customer(first_name=form.first_name.data, last_name=form.last_name.data, phone=form.phone.data, email=form.email.data, first_line_address=form.first_line_address.data, second_line_address=form.second_line_address.data, city=form.city.data, county=form.county.data, postal_code=form.postal_code.data)
+        customer = Customer(first_name=form.first_name.data, 
+                            last_name=form.last_name.data, 
+                            phone=form.phone.data, 
+                            email=form.email.data, 
+                            first_line_address=form.first_line_address.data, 
+                            second_line_address=form.second_line_address.data, 
+                            city=form.city.data, 
+                            county=form.county.data, 
+                            postal_code=form.postal_code.data,
+                            referal=form.referal.data)
         db.session.add(customer)
         db.session.commit()
         flash('Customer added successfully!')
         return redirect(url_for('dash'))
     return render_template('add_customer.html', title='Add Customer', form=form)
 
+
 @app.route('/view_all_customers', methods=['GET', 'POST'])
 @login_required
 def view_all_customers():
     customers = db.session.query(Customer).all()
-    return render_template('view_all_customers.html', title='View Customers', customers=customers)
+    return render_template('view_all_customers.html', title='Customers', customers=customers)
+
+
+@app.route('/view_customer/<int:customer_id>', methods=['GET', 'POST'])
+@login_required
+def view_customer(customer_id):
+    customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
+    return render_template('view_customer.html', title='Customers', subtitle=f"{customer.first_name} {customer.last_name}", customer=customer)
 
 
 

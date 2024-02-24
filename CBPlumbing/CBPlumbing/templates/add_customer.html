@@ -69,7 +69,12 @@
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
+    <p>
+        {{ form.referal.label }}<br>
+        {{ form.referal(size=32) }}<br>
+        {% for error in form.referal.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
     <p>{{ form.submit() }}</p>
  </form>
-
-    {% endblock %}
+{% endblock %}

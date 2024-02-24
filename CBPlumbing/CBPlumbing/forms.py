@@ -43,4 +43,5 @@ class AddCustomerForm(FlaskForm):
     city = StringField('City', validators=[DataRequired()])
     county = StringField('County', validators=[DataRequired()])
     postal_code = StringField('Postal Code', validators=[DataRequired()])
+    referal = StringField('Referal')
     submit = SubmitField('Add Customer')

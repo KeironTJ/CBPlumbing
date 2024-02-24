@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 
-
 {% block content %}
 
 <h2> {{ title }} </h2>
@@ -8,32 +7,33 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>First Line Address</th>
-            <th>Second Line Address</th>
             <th>City</th>
-            <th>County</th>
-            <th>Postal Code</th>
-            <th>Phone</th>
-            <th>Email</th>
+            <th>Referal</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         {% for customer in customers %}
         <tr>
+            <td>{{ customer.id}}</td>
             <td>{{ customer.first_name }}</td>
             <td>{{ customer.last_name }}</td>
             <td>{{ customer.first_line_address }}</td>
-            <td>{{ customer.second_line_address }}</td>
             <td>{{ customer.city }}</td>
-            <td>{{ customer.county }}</td>
-            <td>{{ customer.postal_code }}</td>
-            <td>{{ customer.phone }}</td>
-            <td>{{ customer.email }} </td>
+            <td>{{ customer.referal }}</td>
+            <td> 
+                <form>
+                    <a class="btn btn-default" href="{{ url_for('view_customer', customer_id=customer.id) }}">View &raquo;</a>
+                </form> 
+            </td>
         </tr>
         {% endfor %}
     </tbody>
+</table>
 
 
 {% endblock %}
