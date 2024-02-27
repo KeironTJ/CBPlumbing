@@ -1,4 +1,6 @@
+from operator import itemgetter
 from typing import Optional
+from datetime import datetime, timezone
 
 from flask_login import UserMixin
 import sqlalchemy as sa
@@ -38,6 +40,32 @@ class Customer(db.Model):
     county: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     postal_code: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     referal: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    
+
+class Job(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    customer_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('customer.id'))
+    customer: so.Mapped[Customer] = so.relationship('Customer', backref='jobs')
+    job_type: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_description: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    job_status: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_notes: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_cost: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_invoice: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_invoice_date: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    job_invoice_paid: so.Mapped[bool] = so.mapped_column(sa.Boolean(120), index=True)
+    
+
+class JobItem(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    job_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('job.id'))
+    job: so.Mapped[Job] = so.relationship('Job', backref='job_items')
+    item_type: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    item_description: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    item_cost: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    labour_hours: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    
     
 
 @login.user_loader

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2> <a href="{{ url_for('view_all_customers') }} "> {{ title }} </a> -> {{ subtitle }} </h2>
+<h2><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_customers') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
 
 
 <p>Customer ID: {{ customer.id}}</p>

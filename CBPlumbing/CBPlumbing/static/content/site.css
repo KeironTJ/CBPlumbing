@@ -48,3 +48,21 @@ input[type="checkbox"].input-validation-error {
     left: 0;
     z-index: -1;
 }
+
+
+.dash-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    width: 200px;
+}
+
+.dash-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}

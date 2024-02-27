@@ -10,8 +10,8 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from CBPlumbing import app, db
-from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm
-from CBPlumbing.models import User, Customer
+from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, AddJobForm
+from CBPlumbing.models import User, Customer, Job, JobItem
 
 
 @app.route('/')
@@ -123,6 +123,33 @@ def view_all_customers():
 def view_customer(customer_id):
     customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
     return render_template('view_customer.html', title='Customers', subtitle=f"{customer.first_name} {customer.last_name}", customer=customer)
+
+@app.route('/add_job', methods=['GET', 'POST'])
+@login_required
+def add_job():
+    form = AddJobForm()
+    if form.validate_on_submit():
+        job = Job(customer_id=form.customer_id.data, 
+                  job_type=form.job_type.data, 
+                  job_description=form.job_description.data, 
+                  job_status=form.job_status.data, 
+                  job_notes=form.job_notes.data, 
+                  job_cost=form.job_cost.data, 
+                  job_invoice=form.job_invoice.data, 
+                  job_invoice_date=form.job_invoice_date.data, 
+                  job_invoice_paid=form.job_invoice_paid.data)
+        db.session.add(job)
+        db.session.commit()
+        flash('Job added successfully!')
+        return redirect(url_for('dash'))
+    return render_template('add_job.html', title='Add Job', form=form)
+
+@app.route('/view_all_jobs', methods=['GET', 'POST'])
+@login_required
+def view_all_jobs():
+    jobs = db.session.query(Job).all()
+    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs)
+
 
 
 

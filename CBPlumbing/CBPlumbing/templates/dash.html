@@ -3,36 +3,35 @@
 {% block content %}
 
 <div class="jumbotron">
-    <h1>Dashboard: </h1>
+    <h1>Dashboard </h1>
 </div>
 
-<div class="container">
-    <h2>Customer</h2>
-    <p><a class="btn btn-default" href="{{ url_for('add_customer') }}">Add Customer &raquo;</a></p>
-    <p><a class="btn btn-default" href="{{ url_for('view_all_customers') }}">View Customers &raquo;</a></p>
-</div>
 
 <div class="container">
-    <h2>Jobs</h2>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">Add Job &raquo;</a></p>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Job &raquo;</a></p>
-</div>
-
-<div class="container">
-    <h2>Invoicing</h2>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">Add Invoice &raquo;</a></p>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Invoice &raquo;</a></p>
-</div>
-
-<div class="container">
-    <h2>Contracts</h2>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">Add Contract &raquo;</a></p>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Contract &raquo;</a></p>
-</div>
-
-<div class="container">
-    <h2>Reports</h2>
-    <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Reports &raquo;</a></p>
+    <div class="dash-card">
+        <div class="dash-card-title">Customer</div>
+        <p><a class="btn btn-default" href="{{ url_for('add_customer') }}">Add Customer &raquo;</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('view_all_customers') }}">View All Customers &raquo;</a></p>
+    </div>
+    <div class="dash-card">
+        <div class="dash-card-title">Jobs</div>
+        <p><a class="btn btn-default" href="{{ url_for('add_job') }}">Add Job &raquo;</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('view_all_jobs') }}">View All Jobs &raquo;</a></p>
+    </div>
+    <div class="dash-card">
+        <div class="dash-card-title">Invoicing</div>
+        <p><a class="btn btn-default" href="{{ url_for('dash') }}">Add Invoice &raquo;</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Invoice &raquo;</a></p>
+    </div>
+    <div class="dash-card">
+        <div class="dash-card-title">Contracts</div>
+        <p><a class="btn btn-default" href="{{ url_for('dash') }}">Add Contract &raquo;</a></p>
+        <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Contract &raquo;</a></p>
+    </div>
+    <div class="dash-card">
+        <div class="dash-card-title">Reports</div>
+        <p><a class="btn btn-default" href="{{ url_for('dash') }}">View Reports &raquo;</a></p>
+    </div>
 </div>
 
 {% endblock %}

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2> <a href="{{ url_for('dash') }}">Dashboard</a> -> {{ title }} </h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer ID</th>
+            <th>Job Type</th>
+            <th>Job Description</th>
+            <th>Job Status</th>
+            <th>Job Notes</th>
+            <th>Job Cost</th>
+            <th>Job Invoice</th>
+            <th>Job Date</th>
+            <th>Job Completed</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.id}}</td>
+            <td>{{ job.customer_id }}</td>
+            <td>{{ job.job_type }}</td>
+            <td>{{ job.job_description }}</td>
+            <td>{{ job.job_status }}</td>
+            <td>{{ job.job_notes }}</td>
+            <td>{{ job.job_cost }}</td>
+            <td>{{ job.job_invoice }}</td>
+            <td>{{ job.job_date }}</td>
+            <td>{{ job.job_completed }}</td>
+            <td> 
+                <form>
+                   
+                </form> 
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
