@@ -48,12 +48,3 @@ class AddCustomerForm(FlaskForm):
     
 class AddJobForm(FlaskForm):
     customer_id = StringField('Customer ID', validators=[DataRequired()])
-    job_type = StringField('Job Type', validators=[DataRequired()])
-    job_description = StringField('Job Description', validators=[DataRequired()])
-    job_status = StringField('Job Status', validators=[DataRequired()])
-    job_notes = StringField('Job Notes')
-    job_cost = StringField('Job Cost')
-    job_invoice = StringField('Job Invoice')
-    job_invoice_date = StringField('Job Invoice Date')
-    job_invoice_paid = BooleanField('Job Invoice Paid')
-    submit = SubmitField('Add Job')

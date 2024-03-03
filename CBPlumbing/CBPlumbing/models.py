@@ -46,25 +46,27 @@ class Job(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     customer_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('customer.id'))
     customer: so.Mapped[Customer] = so.relationship('Customer', backref='jobs')
-    job_type: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    job_description: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    job_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    job_created_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    job_planned_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    job_completed_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     job_status: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     job_notes: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    job_cost: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     job_invoice: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    job_invoice_date: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    job_invoice_paid: so.Mapped[bool] = so.mapped_column(sa.Boolean(120), index=True)
     
 
 class JobItem(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     job_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('job.id'))
     job: so.Mapped[Job] = so.relationship('Job', backref='job_items')
+    item_created_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    item_planned_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    item_completed_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     item_type: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
     item_description: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    item_cost: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
-    labour_hours: so.Mapped[str] = so.mapped_column(sa.String(120), index=True)
+    item_notes: so.Mapped[str] = so.mapped_column(sa.String(240), index=True)  
+    labour_hours: so.Mapped[float] = so.mapped_column(sa.Float(120), index=True)
+    item_cost: so.Mapped[float] = so.mapped_column(sa.Float(120), index=True)
+    
     
     
 

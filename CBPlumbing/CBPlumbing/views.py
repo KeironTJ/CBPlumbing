@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 from CBPlumbing import app, db
 from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, AddJobForm
-from CBPlumbing.models import User, Customer, Job, JobItem
+from CBPlumbing.models import User, Customer, Job
 
 
 @app.route('/')

@@ -16,62 +16,6 @@
         {% endfor %}
     </p>
     <p>
-        {{ form.job_type.label }}<br>
-        {{ form.job_type(size=32) }}<br>
-        {% for error in form.job_type.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.job_description.label }}<br>
-        {{ form.job_description(size=32) }}<br>
-        {% for error in form.job_description.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.job_status.label }}<br>
-        {{ form.job_status(size=32) }}<br>
-        {% for error in form.job_status.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.job_notes.label }}<br>
-        {{ form.job_notes(size=32) }}<br>
-        {% for error in form.job_notes.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.job_cost.label }}<br>
-        {{ form.job_cost(size=32) }}<br>
-        {% for error in form.job_cost.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-     </p>
-    <p>
-        {{ form.job_invoice.label }}<br>
-        {{ form.job_invoice(size=32) }}<br>
-        {% for error in form.job_invoice.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-     </p>
-    <p>
-        {{ form.job_invoice_date.label }}<br>
-        {{ form.job_invoice_date(size=32) }}<br>
-        {% for error in form.job_invoice_date.errors %}  
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-     </p>
-    <p>
-        {{ form.job_invoice_paid.label }}<br>
-        {{ form.job_invoice_paid(size=32) }}<br>
-        {% for error in form.job_invoice_paid.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
         <input type="submit" value="Add Job">
     </p>
 </form>
