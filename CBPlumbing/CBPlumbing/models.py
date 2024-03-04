@@ -66,7 +66,22 @@ class JobItem(db.Model):
     item_notes: so.Mapped[str] = so.mapped_column(sa.String(240), index=True)  
     labour_hours: so.Mapped[float] = so.mapped_column(sa.Float(120), index=True)
     item_cost: so.Mapped[float] = so.mapped_column(sa.Float(120), index=True)
+    item_quantity: so.Mapped[float] = so.mapped_column(sa.Float(120), index=True)
     
+
+class Invoice(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    job_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('job.id'), nullable=False)
+    job: so.Mapped[Job] = so.relationship('Job', backref='invoices')
+    customer_id: so.Mapped[int] = so.mapped_column(sa.Integer, sa.ForeignKey('customer.id'), nullable=False)
+    customer: so.Mapped[Customer] = so.relationship('Customer', backref='invoices')
+    invoice_created_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    iinvoice_due_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    invoice_completed_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    invoice_cost: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
+    invoice_margin: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
+    invoice_price: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
+    invoice_notes: so.Mapped[str] = so.mapped_column(sa.String(240), index=True)
     
     
 
