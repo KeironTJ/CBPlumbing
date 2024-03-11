@@ -38,9 +38,10 @@ class Customer(db.Model):
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    job_type = db.Column(db.String(120), index=True)
     job_status = db.Column(db.String(120), index=True)
     job_notes = db.Column(db.String(240), index=True)
-    job_invoice = db.Column(db.String(120), index=True)
+    invoice_status = db.Column(db.String(120), index=True)
     
     
 @login.user_loader

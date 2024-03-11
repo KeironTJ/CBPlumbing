@@ -2,16 +2,22 @@
 
 {% block content %}
 
-<h2><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_jobs') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
+<h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_jobs') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
 
-<p>Job ID: {{ job.id}}</p>
-<p>Customer ID: {{ job.customer_id }}</p>
-<p>Job Type: {{ job.job_type }}</p>
-<p>Job Description: {{ job.job_description }}</p>
-<p>Job Status: {{ job.job_status }}</p>
-<p>Job Notes: {{ job.job_notes }}</p>
+<h3 class="title-card"> Job ID: {{ job.id }} </h3>
+<div class="job-card">
+    <p>Customer ID: {{ job.customer_id }}</p>
+    <p>Customer Name: {{ customer.first_name }} {{ customer.last_name }} </p>
+    <p>Job Type: {{ job.job_type }}</p>
+    <p>Job Description: {{ job.job_description }}</p>
+    <p>Job Status: {{ job.job_status }}</p>
+    <p>Job Notes: {{ job.job_notes }}</p>
+</div>
 
 
 
+<div>
+    <a class="btn btn-primary" href="{{ url_for('edit_job', job_id=job.id) }} ">Edit Job &raquo;</a>
+</div>
 
 {% endblock %}

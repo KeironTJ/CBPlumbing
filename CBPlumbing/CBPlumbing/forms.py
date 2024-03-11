@@ -44,12 +44,13 @@ class AddCustomerForm(FlaskForm):
     county = StringField('County', validators=[DataRequired()])
     postal_code = StringField('Postal Code', validators=[DataRequired()])
     referal = StringField('Referal')
-    submit = SubmitField('Add Customer')
+    submit = SubmitField('Submit')
     
 
 class JobForm(FlaskForm):
     customer_id = SelectField('Customer', coerce=int)
     job_status = SelectField('Job Status', validators=[DataRequired()])
+    job_type = SelectField('Job Type', validators=[DataRequired()])
     job_notes = TextAreaField('Job Notes', validators=[Length(min=0, max=140)])
-    job_invoice = StringField('Job Invoice')
+    invoice_status = SelectField('Invoice Status', validators=[DataRequired()])
     submit = SubmitField('Submit')

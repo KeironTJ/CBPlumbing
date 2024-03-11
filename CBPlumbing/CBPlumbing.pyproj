@@ -67,6 +67,8 @@
     </Content>
     <Content Include="CBPlumbing\templates\add_customer.html" />
     <Content Include="CBPlumbing\templates\dash.html" />
+    <Content Include="CBPlumbing\templates\edit_customer.html" />
+    <Content Include="CBPlumbing\templates\edit_job.html" />
     <Content Include="CBPlumbing\templates\login.html" />
     <Content Include="CBPlumbing\templates\register.html" />
     <Content Include="CBPlumbing\templates\view_all_customers.html" />

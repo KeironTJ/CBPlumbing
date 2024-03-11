@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> -> <a href="{{ url_for('view_all_customers') }}">Customers</a> -> {{ title }}</h2>
+
+<h3 class="title-card"> Customer ID: {{ customer.id }} </h3>
+
+<div class="add-customer-card">
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.first_name.label }}<br>
+            {{ form.first_name(size=32) }}<br>
+            {% for error in form.first_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.last_name.label }}<br>
+            {{ form.last_name(size=32) }}<br>
+            {% for error in form.last_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.first_line_address.label }}<br>
+            {{ form.first_line_address(size=32) }}<br>
+            {% for error in form.first_line_address.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.second_line_address.label }}<br>
+            {{ form.second_line_address(size=32) }}<br>
+            {% for error in form.second_line_address.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.city.label }}<br>
+            {{ form.city(size=32) }}<br>
+            {% for error in form.city.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.county.label }}<br>
+            {{ form.county(size=32) }}<br>
+            {% for error in form.county.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.postal_code.label }}<br>
+            {{ form.postal_code(size=32) }}<br>
+            {% for error in form.postal_code.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.phone.label }}<br>
+            {{ form.phone(size=32) }}<br>
+            {% for error in form.phone.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.referal.label }}<br>
+            {{ form.referal(size=32) }}<br>
+            {% for error in form.referal.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</div>
+
+<div>
+    <a class="btn btn-primary" href="{{ url_for('view_customer', customer_id=customer.id) }} ">View Customer &raquo;</a>
+    <a class="btn btn-danger" href="{{ url_for('delete_customer', customer_id=customer.id) }} ">Delete Customer &raquo;</a>
+</div>
+{% endblock %}

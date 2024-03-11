@@ -104,8 +104,20 @@ def add_customer():
         db.session.add(customer)
         db.session.commit()
         flash('Customer added successfully!')
-        return redirect(url_for('dash'))
+        return redirect(url_for('view_all_customers'))
     return render_template('add_customer.html', title='Add Customer', form=form)
+
+@app.route('/edit_customer/<int:customer_id>', methods=['GET', 'POST'])
+@login_required
+def edit_customer(customer_id):
+    customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
+    form = AddCustomerForm(obj=customer)
+    if form.validate_on_submit():
+        form.populate_obj(customer)
+        db.session.commit()
+        flash('Customer updated successfully!')
+        return redirect(url_for('view_all_customers'))
+    return render_template('edit_customer.html', form=form, title = 'Edit Customer', customer=customer, subtitle="Edit Customer")
 
 
 @app.route('/view_all_customers', methods=['GET', 'POST'])
@@ -115,11 +127,20 @@ def view_all_customers():
     return render_template('view_all_customers.html', title='Customers', customers=customers)
 
 
+@app.route('/delete_customer/<int:customer_id>', methods=['GET', 'POST'])
+@login_required
+def delete_customer(customer_id):
+    customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
+    db.session.delete(customer)
+    db.session.commit()
+    return redirect(url_for('view_all_customers'))
+
+
 @app.route('/view_customer/<int:customer_id>', methods=['GET', 'POST'])
 @login_required
 def view_customer(customer_id):
     customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
-    return render_template('view_customer.html', title='Customers', subtitle=f"{customer.first_name} {customer.last_name}", customer=customer)
+    return render_template('view_customer.html', title='Customers', subtitle="View Customer", customer=customer)
 
 
 
@@ -129,12 +150,15 @@ def add_job():
     form = JobForm()
     form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
     form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
+    form.invoice_status.choices = [(status, status) for status in QueryConfig.INVOICE_STATUS_LIST]
+    form.job_type.choices = [(type, type) for type in QueryConfig.JOB_TYPE_LIST]
     if form.validate_on_submit():
         job = Job(
             customer_id=form.customer_id.data, 
+            job_type=form.job_type.data,
             job_status=form.job_status.data,
             job_notes=form.job_notes.data,
-            job_invoice=form.job_invoice.data
+            invoice_status=form.invoice_status.data
         )
         db.session.add(job)           
         db.session.commit()
@@ -145,19 +169,40 @@ def add_job():
     form.process(obj=request.form)
     return render_template('add_job.html', form=form, title = 'Add Job')
 
+@app.route('/edit_job/<int:job_id>', methods=['GET', 'POST'])
+@login_required
+def edit_job(job_id):
+    job = db.session.query(Job).filter(Job.id == job_id).first()
+    form = JobForm(obj=job)
+    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
+    form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
+    form.invoice_status.choices = [(status, status) for status in QueryConfig.INVOICE_STATUS_LIST]
+    form.job_type.choices = [(type, type) for type in QueryConfig.JOB_TYPE_LIST]
+    if form.validate_on_submit():
+        form.populate_obj(job)
+        db.session.commit()
+        flash('Job updated successfully!')
+        return redirect(url_for('view_all_jobs'))
+    return render_template('edit_job.html', form=form, title = 'Jobs', job=job, subtitle="Edit Job")
+
 
 @app.route('/view_all_jobs', methods=['GET', 'POST'])
 @login_required
 def view_all_jobs():
     jobs = db.session.query(Job).all()
-    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs)
+    customer = db.session.query(Customer).filter(Customer.id == Job.customer_id).first()
+    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs, customer=customer)
+
+
 
 @app.route('/view_job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def view_job(job_id):
     job = db.session.query(Job).filter(Job.id == job_id).first()
     customer = db.session.query(Customer).filter(Customer.id == job.customer_id).first()
-    return render_template('view_job.html', title='Jobs', subtitle=f"Job {job.id}", job=job, customer=customer)
+    return render_template('view_job.html', title='Jobs', subtitle="View Job", job=job, customer=customer)
+
+
 
 @app.route('/delete_job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
