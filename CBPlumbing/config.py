@@ -7,3 +7,12 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
     
+
+class QueryConfig(object):
+    JOB_STATUS_LIST = ['Open', 'Pending', 'In Progress', 'Complete']
+    INVOICE_STATUS_LIST = ['Unpaid', 'Paid']
+    CUSTOMER_STATUS_LIST = ['Active', 'Inactive']
+    JOB_TYPE_LIST = ['Customer', 'Contract', 'Warranty', 'Other']
+    JOB_PRIORITY_LIST = ['Low', 'Medium', 'High']
+    
+    

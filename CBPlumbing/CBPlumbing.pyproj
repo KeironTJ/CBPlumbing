@@ -72,6 +72,7 @@
     <Content Include="CBPlumbing\templates\view_all_customers.html" />
     <Content Include="CBPlumbing\templates\view_customer.html" />
     <Content Include="CBPlumbing\templates\view_all_jobs.html" />
+    <Content Include="CBPlumbing\templates\view_job.html" />
     <Content Include="requirements.txt" />
     <Content Include="CBPlumbing\static\content\bootstrap.css" />
     <Content Include="CBPlumbing\static\content\bootstrap.min.css" />

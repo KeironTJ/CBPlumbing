@@ -1,17 +1,14 @@
-"""
-Routes and views for the flask application.
-"""
-
 from datetime import datetime
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from CBPlumbing import app, db
-from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, AddJobForm
+from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, JobForm
 from CBPlumbing.models import User, Customer, Job
+from config import QueryConfig
 
 
 @app.route('/')
@@ -124,31 +121,51 @@ def view_customer(customer_id):
     customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
     return render_template('view_customer.html', title='Customers', subtitle=f"{customer.first_name} {customer.last_name}", customer=customer)
 
+
+
 @app.route('/add_job', methods=['GET', 'POST'])
 @login_required
 def add_job():
-    form = AddJobForm()
+    form = JobForm()
+    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
+    form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
     if form.validate_on_submit():
-        job = Job(customer_id=form.customer_id.data, 
-                  job_type=form.job_type.data, 
-                  job_description=form.job_description.data, 
-                  job_status=form.job_status.data, 
-                  job_notes=form.job_notes.data, 
-                  job_cost=form.job_cost.data, 
-                  job_invoice=form.job_invoice.data, 
-                  job_invoice_date=form.job_invoice_date.data, 
-                  job_invoice_paid=form.job_invoice_paid.data)
-        db.session.add(job)
+        job = Job(
+            customer_id=form.customer_id.data, 
+            job_status=form.job_status.data,
+            job_notes=form.job_notes.data,
+            job_invoice=form.job_invoice.data
+        )
+        db.session.add(job)           
         db.session.commit()
         flash('Job added successfully!')
-        return redirect(url_for('dash'))
-    return render_template('add_job.html', title='Add Job', form=form)
+        return redirect(url_for('view_all_jobs'))
+    
+    # Populate form with submitted data if validation fails
+    form.process(obj=request.form)
+    return render_template('add_job.html', form=form, title = 'Add Job')
+
 
 @app.route('/view_all_jobs', methods=['GET', 'POST'])
 @login_required
 def view_all_jobs():
     jobs = db.session.query(Job).all()
     return render_template('view_all_jobs.html', title='Jobs', jobs=jobs)
+
+@app.route('/view_job/<int:job_id>', methods=['GET', 'POST'])
+@login_required
+def view_job(job_id):
+    job = db.session.query(Job).filter(Job.id == job_id).first()
+    customer = db.session.query(Customer).filter(Customer.id == job.customer_id).first()
+    return render_template('view_job.html', title='Jobs', subtitle=f"Job {job.id}", job=job, customer=customer)
+
+@app.route('/delete_job/<int:job_id>', methods=['GET', 'POST'])
+@login_required
+def delete_job(job_id):
+    job = db.session.query(Job).filter(Job.id == job_id).first()
+    db.session.delete(job)
+    db.session.commit()
+    return redirect(url_for('view_all_jobs'))
 
 
 

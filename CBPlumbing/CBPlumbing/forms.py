@@ -1,7 +1,7 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 from CBPlumbing import db
 from CBPlumbing.models import User
@@ -46,5 +46,10 @@ class AddCustomerForm(FlaskForm):
     referal = StringField('Referal')
     submit = SubmitField('Add Customer')
     
-class AddJobForm(FlaskForm):
-    customer_id = StringField('Customer ID', validators=[DataRequired()])
+
+class JobForm(FlaskForm):
+    customer_id = SelectField('Customer', coerce=int)
+    job_status = SelectField('Job Status', validators=[DataRequired()])
+    job_notes = TextAreaField('Job Notes', validators=[Length(min=0, max=140)])
+    job_invoice = StringField('Job Invoice')
+    submit = SubmitField('Submit')

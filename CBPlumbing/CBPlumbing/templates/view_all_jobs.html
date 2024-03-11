@@ -35,7 +35,8 @@
             <td>{{ job.job_completed }}</td>
             <td> 
                 <form>
-                   
+                    <a href="{{ url_for('view_job', job_id=job.id) }}" class="btn btn-primary">View</a>
+                    <a href="{{ url_for('delete_job', job_id=job.id) }}" class="btn btn-danger">Delete</a>
                 </form> 
             </td>
         </tr>

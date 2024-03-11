@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_jobs') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
+
+<p>Job ID: {{ job.id}}</p>
+<p>Customer ID: {{ job.customer_id }}</p>
+<p>Job Type: {{ job.job_type }}</p>
+<p>Job Description: {{ job.job_description }}</p>
+<p>Job Status: {{ job.job_status }}</p>
+<p>Job Notes: {{ job.job_notes }}</p>
+
+
+
+
+{% endblock %}

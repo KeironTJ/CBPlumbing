@@ -1,23 +1,40 @@
 {% extends "layout.html" %}
-
 {% block content %}
 
-<h2><a href="{{ url_for('dash') }}">Dashboard</a> -> {{ title }}.</h2>
-
-
+<h2> <a href="{{ url_for('dash') }}">Dashboard</a> -> {{ title }} </h2>
 
 <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     <p>
         {{ form.customer_id.label }}<br>
-        {{ form.customer_id(size=32) }}<br>
+        {{ form.customer_id }}<br>
         {% for error in form.customer_id.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
     <p>
-        <input type="submit" value="Add Job">
+        {{ form.job_status.label }}<br>
+        {{ form.job_status }}<br>
+        {% for error in form.job_status.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
     </p>
+    <p>
+        {{ form.job_notes.label }}<br>
+        {{ form.job_notes(size=32) }}<br>
+        {% for error in form.job_notes.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.job_invoice.label }}<br>
+        {{ form.job_invoice(size=32) }}<br>
+        {% for error in form.job_invoice.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+   
+    <p>{{ form.submit() }}</p>
 </form>
 
-    {% endblock %}
+{% endblock %}
