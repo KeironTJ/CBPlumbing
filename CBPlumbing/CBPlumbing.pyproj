@@ -66,6 +66,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="CBPlumbing\templates\add_customer.html" />
+    <Content Include="CBPlumbing\templates\add_job_item.html" />
     <Content Include="CBPlumbing\templates\dash.html" />
     <Content Include="CBPlumbing\templates\edit_customer.html" />
     <Content Include="CBPlumbing\templates\edit_job.html" />

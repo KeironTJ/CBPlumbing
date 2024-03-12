@@ -6,7 +6,7 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 
 from CBPlumbing import app, db
-from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, JobForm
+from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, JobForm, JobItemForm
 from CBPlumbing.models import User, Customer, Job
 from config import QueryConfig
 
@@ -163,11 +163,13 @@ def add_job():
         db.session.add(job)           
         db.session.commit()
         flash('Job added successfully!')
-        return redirect(url_for('view_all_jobs'))
+        last_id = db.session.query(Job).order_by(Job.id.desc()).first().id
+        return redirect(url_for('edit_job', job_id=last_id))
     
     # Populate form with submitted data if validation fails
     form.process(obj=request.form)
     return render_template('add_job.html', form=form, title = 'Add Job')
+
 
 @app.route('/edit_job/<int:job_id>', methods=['GET', 'POST'])
 @login_required

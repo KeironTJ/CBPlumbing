@@ -43,6 +43,15 @@ class Job(db.Model):
     job_notes = db.Column(db.String(240), index=True)
     invoice_status = db.Column(db.String(120), index=True)
     
+class JobItems(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    item_name = db.Column(db.String(120), index=True)
+    item_description = db.Column(db.String(240), index=True)
+    item_cost = db.Column(db.Float, index=True)
+    item_quantity = db.Column(db.Integer, index=True)
+    item_total = db.Column(db.Float, index=True)
+    
     
 @login.user_loader
 def load_user(id):

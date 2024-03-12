@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, IntegerField, FloatField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 from CBPlumbing import db
@@ -54,3 +54,11 @@ class JobForm(FlaskForm):
     job_notes = TextAreaField('Job Notes', validators=[Length(min=0, max=140)])
     invoice_status = SelectField('Invoice Status', validators=[DataRequired()])
     submit = SubmitField('Submit')
+    
+class JobItemForm(FlaskForm):
+    job_id = SelectField('Job', coerce=int)
+    item_name = StringField('Item Name', validators=[DataRequired()])
+    item_description = TextAreaField('Item Description', validators=[Length(min=0, max=140)])
+    item_quantity = IntegerField('Item Quantity', validators=[DataRequired()])
+    item_cost = FloatField('Item Cost', validators=[DataRequired()])
+    submit = SubmitField('Add Item')
