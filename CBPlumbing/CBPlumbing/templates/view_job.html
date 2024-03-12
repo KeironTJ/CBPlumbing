@@ -4,15 +4,58 @@
 
 <h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_jobs') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
 
-<h3 class="title-card"> Job ID: {{ job.id }} - Header </h3>
-<div class="job-card">
-    <p>Customer ID: {{ job.customer_id }}</p>
-    <p>Customer Name: {{ customer.first_name }} {{ customer.last_name }} </p>
-    <p>Job Type: {{ job.job_type }}</p>
-    <p>Job Description: {{ job.job_description }}</p>
-    <p>Job Status: {{ job.job_status }}</p>
-    <p>Job Notes: {{ job.job_notes }}</p>
+<div class="title-card">
+
+    <h3 class="title-card"> Job ID: {{ job.id }} - Header </h3>
+
+    <div class="job-card">
+        <table class="table table-striped table-card">
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>Job Type</th>
+                <th>Job Description</th>
+                <th>Job Status</th>
+            </tr>
+            <tr>
+                <td>{{ job.customer_id }}</td>
+                <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                <td>{{ job.job_type }}</td>
+                <td>{{ job.job_description }}</td>
+                <td>{{ job.job_status }}</td>
+            </tr>
+        </table>
+        <strong>Job Notes:</strong><br>{{ job.job_notes }}
+    </div>
 </div>
+
+<div class="title-card">
+    <h3 class="title-card"> Job ID: {{ job.id }} - Items </h3>
+
+    <div class="title-card">
+        <table class="table table-striped table-card">
+            <tr>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Item Description</th>
+                <th>Item Quantity</th>
+                <th>Item Cost</th>
+                <th>Total Cost</th>
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.item_description }}</td>
+                <td>{{ item.item_quantity }}</td>
+                <td>{{ item.item_cost }}</td>
+                <td>{{ item.item_quantity * item.item_cost }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
 
 
 

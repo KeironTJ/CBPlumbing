@@ -7,7 +7,7 @@ import sqlalchemy as sa
 
 from CBPlumbing import app, db
 from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, JobForm, JobItemForm
-from CBPlumbing.models import User, Customer, Job
+from CBPlumbing.models import User, Customer, Job, JobItems
 from config import QueryConfig
 
 
@@ -175,6 +175,7 @@ def add_job():
 @login_required
 def edit_job(job_id):
     job = db.session.query(Job).filter(Job.id == job_id).first()
+    items = JobItems.query.filter_by(job_id=job_id).all()
     form = JobForm(obj=job)
     form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
     form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
@@ -184,8 +185,49 @@ def edit_job(job_id):
         form.populate_obj(job)
         db.session.commit()
         flash('Job updated successfully!')
-        return redirect(url_for('view_all_jobs'))
-    return render_template('edit_job.html', form=form, title = 'Jobs', job=job, subtitle="Edit Job")
+        return redirect(url_for('view_job', job_id=job_id))
+    
+    return render_template('edit_job.html', form=form, title = 'Jobs',items=items, job=job, subtitle="Edit Job")
+
+@app.route('/add_job_item/<int:job_id>', methods=['GET', 'POST'])
+@login_required
+def add_job_item(job_id):
+    form = JobItemForm()
+    if form.validate_on_submit():
+        job_item = JobItems(
+            job_id=job_id,
+            item_name=form.item_name.data,
+            item_description=form.item_description.data,
+            item_quantity=form.item_quantity.data,
+            item_cost=form.item_cost.data,
+            item_total=10
+        )
+        db.session.add(job_item)           
+        db.session.commit()
+        flash('Job Item added successfully!')
+        return redirect(url_for('edit_job', job_id=job_id))
+    return render_template('add_job_item.html', form=form, title = 'Add Job Item', job_id=job_id)
+
+@app.route('/edit_job_item/<int:item_id>', methods=['GET', 'POST'])
+@login_required
+def edit_job_item(item_id):
+    item = db.session.query(JobItems).filter(JobItems.id == item_id).first()
+    form = JobItemForm(obj=item)
+    if form.validate_on_submit():
+        form.populate_obj(item)
+        db.session.commit()
+        flash('Job Item updated successfully!')
+        return redirect(url_for('edit_job', job_id=item.job_id))
+    return render_template('edit_job_item.html', form=form, title = 'Edit Job', item=item, subtitle="Edit Item", job_id=item.job_id)
+
+@app.route('/delete_job_item/<int:item_id>', methods=['GET', 'POST'])
+@login_required
+def delete_job_item(item_id):
+    item = db.session.query(JobItems).filter(JobItems.id == item_id).first()
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for('edit_job', job_id=item.job_id))
+
 
 
 @app.route('/view_all_jobs', methods=['GET', 'POST'])
@@ -201,8 +243,9 @@ def view_all_jobs():
 @login_required
 def view_job(job_id):
     job = db.session.query(Job).filter(Job.id == job_id).first()
+    items = JobItems.query.filter_by(job_id=job_id).all()
     customer = db.session.query(Customer).filter(Customer.id == job.customer_id).first()
-    return render_template('view_job.html', title='Jobs', subtitle="View Job", job=job, customer=customer)
+    return render_template('view_job.html', title='Jobs',items=items, subtitle="View Job", job=job, customer=customer)
 
 
 

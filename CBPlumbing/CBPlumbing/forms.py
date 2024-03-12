@@ -56,7 +56,6 @@ class JobForm(FlaskForm):
     submit = SubmitField('Submit')
     
 class JobItemForm(FlaskForm):
-    job_id = SelectField('Job', coerce=int)
     item_name = StringField('Item Name', validators=[DataRequired()])
     item_description = TextAreaField('Item Description', validators=[Length(min=0, max=140)])
     item_quantity = IntegerField('Item Quantity', validators=[DataRequired()])
