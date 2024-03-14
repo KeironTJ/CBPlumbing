@@ -39,13 +39,16 @@
 
     <div class="container">
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+            {% if messages %}
+                <div id="flash-message" class="alert alert-success"> <!-- Add id here -->
+                {{ messages[0] }}
+                </div>
+                <script>
+                setTimeout(function() {
+                    document.getElementById('flash-message').style.display = 'none';
+                }, 5000); // <-- time in milliseconds, 1000 ms = 1 sec
+                </script>
+            {% endif %}
         {% endwith %}
     </div>
     

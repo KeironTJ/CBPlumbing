@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from CBPlumbing import db, login
 
@@ -48,9 +49,13 @@ class JobItems(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
     item_name = db.Column(db.String(120), index=True)
     item_description = db.Column(db.String(240), index=True)
-    item_cost = db.Column(db.Float, index=True)
-    item_quantity = db.Column(db.Integer, index=True)
-    item_total = db.Column(db.Float, index=True)
+    item_quantity = db.Column(db.Integer)
+    item_cost = db.Column(db.Float)
+    item_total = db.Column(db.Float)
+
+    @hybrid_property
+    def item_total(self):
+        return self.item_quantity * self.item_cost
     
     
 @login.user_loader

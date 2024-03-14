@@ -189,6 +189,8 @@ def edit_job(job_id):
     
     return render_template('edit_job.html', form=form, title = 'Jobs',items=items, job=job, subtitle="Edit Job")
 
+'''All below is improved***'''
+
 @app.route('/add_job_item/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def add_job_item(job_id):
@@ -199,8 +201,7 @@ def add_job_item(job_id):
             item_name=form.item_name.data,
             item_description=form.item_description.data,
             item_quantity=form.item_quantity.data,
-            item_cost=form.item_cost.data,
-            item_total=10
+            item_cost=form.item_cost.data
         )
         db.session.add(job_item)           
         db.session.commit()
@@ -211,50 +212,64 @@ def add_job_item(job_id):
 @app.route('/edit_job_item/<int:item_id>', methods=['GET', 'POST'])
 @login_required
 def edit_job_item(item_id):
-    item = db.session.query(JobItems).filter(JobItems.id == item_id).first()
+    item = db.session.query(JobItems).get(item_id)
+    if item is None:
+        flash('Job item not found!', 'error')
+        return redirect(url_for('view_all_jobs'))
     form = JobItemForm(obj=item)
     if form.validate_on_submit():
         form.populate_obj(item)
         db.session.commit()
         flash('Job Item updated successfully!')
         return redirect(url_for('edit_job', job_id=item.job_id))
-    return render_template('edit_job_item.html', form=form, title = 'Edit Job', item=item, subtitle="Edit Item", job_id=item.job_id)
+    return render_template('edit_job_item.html', form=form, title = 'Edit Job', item=item, job=item.job_id, subtitle="Edit Item", job_id=item.job_id)
 
-@app.route('/delete_job_item/<int:item_id>', methods=['GET', 'POST'])
+
+@app.route('/delete_job_item/<int:item_id>', methods=['POST'])
 @login_required
 def delete_job_item(item_id):
-    item = db.session.query(JobItems).filter(JobItems.id == item_id).first()
-    db.session.delete(item)
-    db.session.commit()
-    return redirect(url_for('edit_job', job_id=item.job_id))
+    item = db.session.query(JobItems).get(item_id)
+    if item:
+        job_id = item.job_id
+        db.session.delete(item)
+        db.session.commit()
+        flash('Item deleted successfully!')
+    else:
+        flash('Item not found!', 'error')
+    return redirect(url_for('edit_job', job_id=job_id))
 
 
 
-@app.route('/view_all_jobs', methods=['GET', 'POST'])
+@app.route('/view_all_jobs', methods=['GET'])
 @login_required
 def view_all_jobs():
     jobs = db.session.query(Job).all()
-    customer = db.session.query(Customer).filter(Customer.id == Job.customer_id).first()
-    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs, customer=customer)
+    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs)
 
 
 
-@app.route('/view_job/<int:job_id>', methods=['GET', 'POST'])
+@app.route('/view_job/<int:job_id>', methods=['GET'])
 @login_required
 def view_job(job_id):
-    job = db.session.query(Job).filter(Job.id == job_id).first()
+    job = db.session.query(Job).get(job_id)
     items = JobItems.query.filter_by(job_id=job_id).all()
-    customer = db.session.query(Customer).filter(Customer.id == job.customer_id).first()
+    customer = None
+    if job:
+        customer = db.session.query(Customer).get(job.customer_id)
     return render_template('view_job.html', title='Jobs',items=items, subtitle="View Job", job=job, customer=customer)
 
 
 
-@app.route('/delete_job/<int:job_id>', methods=['GET', 'POST'])
+@app.route('/delete_job/<int:job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
-    job = db.session.query(Job).filter(Job.id == job_id).first()
-    db.session.delete(job)
-    db.session.commit()
+    job = db.session.query(Job).get(job_id)
+    if job:
+        db.session.delete(job)
+        db.session.commit()
+        flash('Job deleted successfully!')
+    else:
+        flash('Job not found!', 'error')
     return redirect(url_for('view_all_jobs'))
 
 
