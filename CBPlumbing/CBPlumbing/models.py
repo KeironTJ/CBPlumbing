@@ -43,7 +43,8 @@ class Job(db.Model):
     job_status = db.Column(db.String(120), index=True)
     job_notes = db.Column(db.String(240), index=True)
     invoice_status = db.Column(db.String(120), index=True)
-    
+    items = db.relationship('JobItems', backref='job', lazy='dynamic')
+
 class JobItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'))

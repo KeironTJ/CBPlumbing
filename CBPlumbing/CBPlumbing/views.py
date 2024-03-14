@@ -89,18 +89,10 @@ def dash():
 @app.route('/add_customer', methods=['GET', 'POST'])
 @login_required
 def add_customer():
-    form=AddCustomerForm()
+    form = AddCustomerForm()
     if form.validate_on_submit():
-        customer = Customer(first_name=form.first_name.data, 
-                            last_name=form.last_name.data, 
-                            phone=form.phone.data, 
-                            email=form.email.data, 
-                            first_line_address=form.first_line_address.data, 
-                            second_line_address=form.second_line_address.data, 
-                            city=form.city.data, 
-                            county=form.county.data, 
-                            postal_code=form.postal_code.data,
-                            referal=form.referal.data)
+        customer = Customer()
+        form.populate_obj(customer)
         db.session.add(customer)
         db.session.commit()
         flash('Customer added successfully!')
@@ -110,7 +102,10 @@ def add_customer():
 @app.route('/edit_customer/<int:customer_id>', methods=['GET', 'POST'])
 @login_required
 def edit_customer(customer_id):
-    customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
+    customer = db.session.query(Customer).get(customer_id)
+    if customer is None:
+        flash('Customer not found!', 'error')
+        return redirect(url_for('view_all_customers'))
     form = AddCustomerForm(obj=customer)
     if form.validate_on_submit():
         form.populate_obj(customer)
@@ -120,7 +115,7 @@ def edit_customer(customer_id):
     return render_template('edit_customer.html', form=form, title = 'Edit Customer', customer=customer, subtitle="Edit Customer")
 
 
-@app.route('/view_all_customers', methods=['GET', 'POST'])
+@app.route('/view_all_customers', methods=['GET'])
 @login_required
 def view_all_customers():
     customers = db.session.query(Customer).all()
@@ -130,7 +125,10 @@ def view_all_customers():
 @app.route('/delete_customer/<int:customer_id>', methods=['GET', 'POST'])
 @login_required
 def delete_customer(customer_id):
-    customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
+    customer = db.session.query(Customer).get(customer_id)
+    if customer is None:
+        flash('Customer not found!', 'error')
+        return redirect(url_for('view_all_customers'))
     db.session.delete(customer)
     db.session.commit()
     return redirect(url_for('view_all_customers'))
@@ -139,7 +137,10 @@ def delete_customer(customer_id):
 @app.route('/view_customer/<int:customer_id>', methods=['GET', 'POST'])
 @login_required
 def view_customer(customer_id):
-    customer = db.session.query(Customer).filter(Customer.id == customer_id).first()
+    customer = db.session.query(Customer).get(customer_id)
+    if customer is None:
+        flash('Customer not found!', 'error')
+        return redirect(url_for('view_all_customers'))
     return render_template('view_customer.html', title='Customers', subtitle="View Customer", customer=customer)
 
 
@@ -163,8 +164,7 @@ def add_job():
         db.session.add(job)           
         db.session.commit()
         flash('Job added successfully!')
-        last_id = db.session.query(Job).order_by(Job.id.desc()).first().id
-        return redirect(url_for('edit_job', job_id=last_id))
+        return redirect(url_for('edit_job', job_id=job.id))
     
     # Populate form with submitted data if validation fails
     form.process(obj=request.form)
@@ -174,8 +174,10 @@ def add_job():
 @app.route('/edit_job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def edit_job(job_id):
-    job = db.session.query(Job).filter(Job.id == job_id).first()
-    items = JobItems.query.filter_by(job_id=job_id).all()
+    job = db.session.query(Job).get(job_id)
+    if job is None:
+        flash('Job not found!', 'error')
+        return redirect(url_for('view_all_jobs'))
     form = JobForm(obj=job)
     form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
     form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
@@ -186,10 +188,8 @@ def edit_job(job_id):
         db.session.commit()
         flash('Job updated successfully!')
         return redirect(url_for('view_job', job_id=job_id))
-    
-    return render_template('edit_job.html', form=form, title = 'Jobs',items=items, job=job, subtitle="Edit Job")
+    return render_template('edit_job.html', form=form, title = 'Jobs',items=job.items, job=job, subtitle="Edit Job")
 
-'''All below is improved***'''
 
 @app.route('/add_job_item/<int:job_id>', methods=['GET', 'POST'])
 @login_required
