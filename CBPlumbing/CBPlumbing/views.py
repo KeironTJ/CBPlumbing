@@ -263,15 +263,13 @@ def view_job(job_id):
 @app.route('/delete_job/<int:job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
-    job = db.session.query(Job).get(job_id)
-    if job:
-        db.session.delete(job)
-        db.session.commit()
+    deleted = db.session.query(Job).filter(Job.id == job_id).delete()
+    db.session.commit()
+    if deleted:
         flash('Job deleted successfully!')
     else:
         flash('Job not found!', 'error')
     return redirect(url_for('view_all_jobs'))
-
 
 
 
