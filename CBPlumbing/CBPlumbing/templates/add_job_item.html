@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_jobs') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
+<h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_jobs') }}">Jobs</a> -> <a href="{{ url_for('edit_job', job_id=job_id) }}"> Edit Job </a> -> {{ subtitle }} </h2>
 
 <h3 class="title-card"> Job ID: {{ job_id }} - Header</h3>
 
@@ -25,11 +25,15 @@
             {{ form.item_cost() }}
         </p>
         <p>
+            
             {{ form.submit(class="btn btn-primary") }}
         </p>
     </form>
+    
 
 </div>
+
+<button type="button" class="btn btn-default" onclick="window.history.back()">&laquo; Back to Job</button>
 
 
 {% endblock %}

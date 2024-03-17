@@ -30,11 +30,14 @@
         </table>
 
         <p>
+            
             {{ form.submit(class_="btn btn-primary") }}
             <button type="button" class="btn btn-danger" onclick="submitDeleteForm()">Delete</button>
         </p>        
     </form>
 </div>
+
+<button type="button" class="btn btn-default" onclick="window.history.back()">&laquo; Back to Job</button>
 
 <script>
     function submitDeleteForm() {

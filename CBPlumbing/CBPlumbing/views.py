@@ -162,7 +162,7 @@ def view_customer(customer_id):
 @login_required
 def add_job():
     form = JobForm()
-    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
+    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.filter(Customer.customer_active == True).all()]
     form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
     form.invoice_status.choices = [(status, status) for status in QueryConfig.INVOICE_STATUS_LIST]
     form.job_type.choices = [(type, type) for type in QueryConfig.JOB_TYPE_LIST]
@@ -192,7 +192,7 @@ def edit_job(job_id):
         flash('Job not found!', 'error')
         return redirect(url_for('view_all_jobs'))
     form = JobForm(obj=job)
-    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.all()]
+    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.filter(Customer.customer_active == True).all()]
     form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
     form.invoice_status.choices = [(status, status) for status in QueryConfig.INVOICE_STATUS_LIST]
     form.job_type.choices = [(type, type) for type in QueryConfig.JOB_TYPE_LIST]
@@ -220,7 +220,7 @@ def add_job_item(job_id):
         db.session.commit()
         flash('Job Item added successfully!')
         return redirect(url_for('edit_job', job_id=job_id))
-    return render_template('add_job_item.html', form=form, title = 'Add Job Item', job_id=job_id)
+    return render_template('add_job_item.html', form=form, title = 'Edit Job', job_id=job_id, subtitle="Add Item")
 
 @app.route('/edit_job_item/<int:item_id>', methods=['GET', 'POST'])
 @login_required
