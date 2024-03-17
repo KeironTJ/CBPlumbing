@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
     
 
 class Customer(db.Model): 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(64), index=True)
     last_name = db.Column(db.String(64), index=True)
     phone = db.Column(db.String(64), index=True)
@@ -37,7 +37,7 @@ class Customer(db.Model):
     
 
 class Job(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     job_type = db.Column(db.String(120), index=True)
     job_status = db.Column(db.String(120), index=True)
@@ -46,7 +46,7 @@ class Job(db.Model):
     items = db.relationship('JobItems', backref='job', lazy='dynamic')
 
 class JobItems(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
     item_name = db.Column(db.String(120), index=True)
     item_description = db.Column(db.String(240), index=True)

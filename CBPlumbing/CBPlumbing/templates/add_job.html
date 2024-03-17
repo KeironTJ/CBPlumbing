@@ -3,39 +3,46 @@
 
 <h2 class="title-card"> <a href="{{ url_for('dash') }}">Dashboard</a> -> <a href="{{url_for('view_all_jobs')}}">Jobs</a> -> {{ title }} </h2>
 
-<div class="add-job-card">
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <table>
-            <tr>
-                <td>{{ form.customer_id.label }}</td>
-                <td>{{ form.customer_id }}</td>
-                <td>{% for error in form.customer_id.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-            </tr>
-            <tr>
-                <td>{{ form.job_type.label }}</td>
-                <td>{{ form.job_type }}</td>
-                <td>{% for error in form.job_type.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-            </tr>
-            <tr>
-                <td>{{ form.job_status.label }}</td>
-                <td>{{ form.job_status }}</td>
-                <td>{% for error in form.job_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-            </tr>
-            <tr>
-                <td>{{ form.job_notes.label }}</td>
-                <td>{{ form.job_notes(size=32) }}</td>
-                <td>{% for error in form.job_notes.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-            </tr>
-            <tr>
-                <td>{{ form.invoice_status.label }}</td>
-                <td>{{ form.invoice_status }}</td>
-                <td>{% for error in form.invoice_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-            </tr>
-        </table>
-        <p>{{ form.submit() }}</p>
-    </form>
+
+<div class="title-card">
+    <h3 class="title-card"> Add Job</h3>
+
+    <div class="title-card">
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <table>
+                <tr>
+                    <td>{{ form.customer_id.label }}</td>
+                    <td>{{ form.customer_id }}</td>
+                    <td>{% for error in form.customer_id.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.job_type.label }}</td>
+                    <td>{{ form.job_type }}</td>
+                    <td>{% for error in form.job_type.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.job_status.label }}</td>
+                    <td>{{ form.job_status }}</td>
+                    <td>{% for error in form.job_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.job_notes.label }}</td>
+                    <td>{{ form.job_notes(size=32) }}</td>
+                    <td>{% for error in form.job_notes.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.invoice_status.label }}</td>
+                    <td>{{ form.invoice_status }}</td>
+                    <td>{% for error in form.invoice_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                </tr>
+            </table>
+            <p>{{ form.submit(class="btn btn-primary") }}</p>
+        </form>
+    </div>
+    <a class="btn btn-default" href="{{ url_for('view_all_jobs') }}">&laquo; Back to Jobs</a>
 </div>
+
 
 
 {% endblock %}

@@ -4,23 +4,27 @@
 
 <h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> ->  <a href="{{ url_for('view_all_customers') }}"> {{ title }} </a> -> {{ subtitle }} </h2>
 
-<h3 class="title-card"> Customer ID: {{ customer.id }} </h3>
 
-<div class="customer-card">
-    <p>First Name: {{ customer.first_name }}</p>
-    <p>Last Name: {{ customer.last_name }}</p>
-    <p>Address: {{ customer.first_line_address }}</p>
-    <p>{{ customer.second_line_address }}</p>
-    <p>{{ customer.city }}</p>
-    <p>{{ customer.county }}</p>
-    <p>{{ customer.postal_code }}</p>
-    <p>Phone: {{ customer.phone }}</p>
-    <p>Email: {{ customer.email }} </p>
-    <p>Referal Type: {{ customer.referal }}</p>
-</div>
+<div class="title-card">
+    <h3 class="title-card"> Customer ID: {{ customer.id }} </h3>
 
-<div>
-    <a class="btn btn-primary" href="{{ url_for('edit_customer', customer_id=customer.id) }} ">Edit Customer &raquo;</a>
+    <div class="customer-card">
+        <p><strong>First Name: </strong>{{ customer.first_name }}</p>
+        <p><strong>Last Name: </strong>{{ customer.last_name }}</p>
+        <p><strong>Address: </strong>{{ customer.first_line_address }}</p>
+        <p><strong>Address Line 2: </strong>{{ customer.second_line_address }}</p>
+        <p><strong>City: </strong>{{ customer.city }}</p>
+        <p><strong>County: </strong>{{ customer.county }}</p>
+        <p><strong>Postal Code: </strong>{{ customer.postal_code }}</p>
+        <p><strong>Phone: </strong>{{ customer.phone }}</p>
+        <p><strong>Email: </strong>{{ customer.email }}</p>
+        <p><strong>Referral Type: </strong>{{ customer.referal }}</p>
+    </div>
+
+    <div>
+        <a class="btn btn-default" href="{{ url_for('view_all_customers') }}">&laquo; Back to All Customers</a>
+        <a class="btn btn-primary" href="{{ url_for('edit_customer', customer_id=customer.id) }} ">Edit Customer &raquo;</a>
+    </div>
 </div>
 
 {% endblock %}

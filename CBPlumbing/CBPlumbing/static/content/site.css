@@ -67,50 +67,6 @@ input[type="checkbox"].input-validation-error {
     margin-bottom: 10px;
 }
 
-.add-job-card {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.add_item_card {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.job-card {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.customer-card {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.add-customer-card {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
 .title-card {
     background-color: #f8f9fa;
@@ -122,15 +78,6 @@ input[type="checkbox"].input-validation-error {
 }
 
 .table-card {
-    background-color: #f8f9fa;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-card {
     background-color: #f8f9fa;
     border: 1px solid #e1e4e8;
     border-radius: 6px;

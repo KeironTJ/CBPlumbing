@@ -3,10 +3,12 @@
 
 <h2 class="title-card"><a href="{{ url_for('dash') }}">Dashboard</a> -> <a href="{{ url_for('view_all_customers') }}">Customers</a> -> {{ title }}</h2>
 
-<h3 class="title-card"> Customer ID: {{ customer.id }} </h3>
 
-<div class="add-customer-card">
-    <form action="" method="post" novalidate>
+
+<div class="title-card">
+    <h3 class="title-card"> Customer ID: {{ customer.id }} </h3>
+
+    <form class="title-card" action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
             {{ form.first_name.label }}<br>
@@ -78,12 +80,13 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit(class_="btn btn-primary") }}</p>
     </form>
 </div>
 
 <div>
+    <a class="btn btn-default" href="{{ url_for('view_all_customers') }}">&laquo; Back to All Customers</a>
     <a class="btn btn-primary" href="{{ url_for('view_customer', customer_id=customer.id) }} ">View Customer &raquo;</a>
-    <a class="btn btn-danger" href="{{ url_for('delete_customer', customer_id=customer.id) }} ">Delete Customer &raquo;</a>
+    <a class="btn btn-danger" href="{{ url_for('delete_customer', customer_id=customer.id) }} ">Delete Customer</a>
 </div>
 {% endblock %}

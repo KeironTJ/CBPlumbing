@@ -111,7 +111,7 @@ def edit_customer(customer_id):
         form.populate_obj(customer)
         db.session.commit()
         flash('Customer updated successfully!')
-        return redirect(url_for('view_all_customers'))
+        return redirect(url_for('view_customer', customer_id=customer_id))
     return render_template('edit_customer.html', form=form, title = 'Edit Customer', customer=customer, subtitle="Edit Customer")
 
 
