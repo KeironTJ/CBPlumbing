@@ -33,6 +33,7 @@ class Customer(db.Model):
     county = db.Column(db.String(120), index=True)
     postal_code = db.Column(db.String(120), index=True)
     referal = db.Column(db.String(120), index=True)
+    customer_active = db.Column(db.Boolean, default=True)
     jobs = db.relationship('Job', backref='customer', lazy='dynamic')
     
 

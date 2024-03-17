@@ -4,6 +4,8 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from urllib.parse import urlsplit
 import sqlalchemy as sa
+from sqlalchemy.exc import IntegrityError
+import logging
 
 from CBPlumbing import app, db
 from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, JobForm, JobItemForm
@@ -94,7 +96,12 @@ def add_customer():
         customer = Customer()
         form.populate_obj(customer)
         db.session.add(customer)
-        db.session.commit()
+        try:
+            print("Adding Customer Now")
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            print("Error when adding customer")
         flash('Customer added successfully!')
         return redirect(url_for('view_all_customers'))
     return render_template('add_customer.html', title='Add Customer', form=form)
@@ -118,9 +125,13 @@ def edit_customer(customer_id):
 @app.route('/view_all_customers', methods=['GET'])
 @login_required
 def view_all_customers():
-    customers = db.session.query(Customer).all()
+    customers = []
+    try:
+        print("Executing view_all_customers function")
+        customers = db.session.query(Customer).all()
+    except Exception as e:
+        print("error in view_all_customer", e)
     return render_template('view_all_customers.html', title='Customers', customers=customers)
-
 
 @app.route('/delete_customer/<int:customer_id>', methods=['GET', 'POST'])
 @login_required
