@@ -128,9 +128,11 @@ def view_all_customers():
     customers = []
     try:
         print("Executing view_all_customers function")
-        customers = db.session.query(Customer).all()
+        customers = db.session.query(Customer).filter(Customer.customer_active == True).all()
     except Exception as e:
         print("error in view_all_customer", e)
+
+
     return render_template('view_all_customers.html', title='Customers', customers=customers)
 
 @app.route('/delete_customer/<int:customer_id>', methods=['GET', 'POST'])
@@ -140,7 +142,7 @@ def delete_customer(customer_id):
     if customer is None:
         flash('Customer not found!', 'error')
         return redirect(url_for('view_all_customers'))
-    db.session.delete(customer)
+    customer.customer_active = False
     db.session.commit()
     return redirect(url_for('view_all_customers'))
 
@@ -274,10 +276,11 @@ def view_job(job_id):
 @app.route('/delete_job/<int:job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
-    deleted = db.session.query(Job).filter(Job.id == job_id).delete()
-    db.session.commit()
-    if deleted:
-        flash('Job deleted successfully!')
+    job = db.session.query(Job).filter(Job.id == job_id).first()
+    if job:
+        job.job_status = 'Cancelled'
+        db.session.commit()
+        flash('Job status updated to Cancelled!')
     else:
         flash('Job not found!', 'error')
     return redirect(url_for('view_all_jobs'))
