@@ -60,7 +60,8 @@
     </table>
 
     <div>
-        <strong>Total Cost: £{{ '%.2f'|format(total_cost) }}</strong>
+        <strong>Total Cost: £{{ '%.2f'|format(total_cost or 0.0) }}</strong>
+
     </div>
 
 
