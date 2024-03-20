@@ -22,20 +22,16 @@
                     <td>{% for error in form.job_type.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 </tr>
                 <tr>
-                    <td>{{ form.job_status.label }}</td>
-                    <td>{{ form.job_status }}</td>
-                    <td>{% for error in form.job_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                    <td> {{ form.job_planned_date.label }}</td>
+                    <td>{{ form.job_planned_date }}</td>
+                    <td>{% for error in form.job_planned_date.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 </tr>
                 <tr>
                     <td>{{ form.job_notes.label }}</td>
                     <td>{{ form.job_notes(size=32) }}</td>
                     <td>{% for error in form.job_notes.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 </tr>
-                <tr>
-                    <td>{{ form.invoice_status.label }}</td>
-                    <td>{{ form.invoice_status }}</td>
-                    <td>{% for error in form.invoice_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-                </tr>
+
             </table>
             <p>{{ form.submit(class="btn btn-primary") }}</p>
         </form>

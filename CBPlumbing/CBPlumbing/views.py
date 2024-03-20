@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 import logging
 
 from CBPlumbing import app, db
-from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, JobForm, JobItemForm
+from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, AddJobForm, EditJobForm, JobItemForm
 from CBPlumbing.models import User, Customer, Job, JobItems
 from config import QueryConfig
 
@@ -161,19 +161,19 @@ def view_customer(customer_id):
 @app.route('/add_job', methods=['GET', 'POST'])
 @login_required
 def add_job():
-    form = JobForm()
-    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.filter(Customer.customer_active == True).all()]
-    form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
-    form.invoice_status.choices = [(status, status) for status in QueryConfig.INVOICE_STATUS_LIST]
-    form.job_type.choices = [(type, type) for type in QueryConfig.JOB_TYPE_LIST]
+    form = AddJobForm()
+
+    customers = Customer.query.filter(Customer.customer_active == True).all()
+    form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in customers] if customers else []
+    form.job_type.choices = [(type, type) for type in QueryConfig.JOB_TYPE_LIST] if QueryConfig.JOB_TYPE_LIST else []
+
     if form.validate_on_submit():
         job = Job(
-            customer_id=form.customer_id.data, 
+            customer_id=form.customer_id.data,
             job_type=form.job_type.data,
-            job_status=form.job_status.data,
             job_notes=form.job_notes.data,
-            invoice_status=form.invoice_status.data
-        )
+            job_planned_date=form.job_planned_date.data
+            )
         db.session.add(job)           
         db.session.commit()
         flash('Job added successfully!')
@@ -184,6 +184,7 @@ def add_job():
     return render_template('add_job.html', form=form, title = 'Add Job')
 
 
+
 @app.route('/edit_job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def edit_job(job_id):
@@ -191,7 +192,7 @@ def edit_job(job_id):
     if job is None:
         flash('Job not found!', 'error')
         return redirect(url_for('view_all_jobs'))
-    form = JobForm(obj=job)
+    form = EditJobForm(obj=job)
     form.customer_id.choices = [(c.id, str(c.id) + ' - ' + c.first_name + ' ' + c.last_name) for c in Customer.query.filter(Customer.customer_active == True).all()]
     form.job_status.choices = [(status, status) for status in QueryConfig.JOB_STATUS_LIST]
     form.invoice_status.choices = [(status, status) for status in QueryConfig.INVOICE_STATUS_LIST]
@@ -201,7 +202,66 @@ def edit_job(job_id):
         db.session.commit()
         flash('Job updated successfully!')
         return redirect(url_for('view_job', job_id=job_id))
-    return render_template('edit_job.html', form=form, title = 'Jobs',items=job.items, job=job, subtitle="Edit Job")
+    total_cost = db.session.query(sa.func.sum(JobItems.item_total)).filter(JobItems.job_id == job_id).scalar()
+    return render_template('edit_job.html', form=form, title = 'Jobs',items=job.items, job=job, total_cost=total_cost, subtitle="Edit Job")
+
+
+
+@app.route('/view_all_jobs', methods=['GET'])
+@login_required
+def view_all_jobs():
+    job_type = request.args.get('job_type')
+    job_status = request.args.get('job_status')
+    invoice_status = request.args.get('invoice_status')
+
+    query = db.session.query(Job)
+    if job_type:
+        query = query.filter(Job.job_type == job_type)
+    if job_status:
+        query = query.filter(Job.job_status == job_status)
+    if invoice_status:
+        query = query.filter(Job.invoice_status == invoice_status)
+
+    jobs = query.all()
+    job_costs = {}
+    for job in jobs:
+        total_cost = db.session.query(sa.func.sum(JobItems.item_total)).filter(JobItems.job_id == job.id).scalar()
+        job_costs[job.id] = total_cost
+    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs, job_costs=job_costs,
+                       job_type=QueryConfig.JOB_TYPE_LIST, job_status=QueryConfig.JOB_STATUS_LIST, invoice_status=QueryConfig.INVOICE_STATUS_LIST,
+                       selected_job_type=job_type, selected_job_status=job_status, selected_invoice_status=invoice_status)
+
+
+
+
+
+
+@app.route('/view_job/<int:job_id>', methods=['GET'])
+@login_required
+def view_job(job_id):
+    job = db.session.query(Job).get(job_id)
+    items = JobItems.query.filter_by(job_id=job_id).all()
+    customer = None
+    if job:
+        customer = db.session.query(Customer).get(job.customer_id)
+        
+    total_cost = db.session.query(sa.func.sum(JobItems.item_total)).filter(JobItems.job_id == job_id).scalar()
+    return render_template('view_job.html', title='Jobs',items=items, total_cost=total_cost, subtitle="View Job", job=job, customer=customer)
+
+
+
+@app.route('/delete_job/<int:job_id>', methods=['POST'])
+@login_required
+def delete_job(job_id):
+    job = db.session.query(Job).filter(Job.id == job_id).first()
+    if job:
+        job.job_status = 'Cancelled'
+        db.session.commit()
+        flash('Job status updated to Cancelled!')
+    else:
+        flash('Job not found!', 'error')
+    return redirect(url_for('view_all_jobs'))
+
 
 
 @app.route('/add_job_item/<int:job_id>', methods=['GET', 'POST'])
@@ -253,37 +313,6 @@ def delete_job_item(item_id):
 
 
 
-@app.route('/view_all_jobs', methods=['GET'])
-@login_required
-def view_all_jobs():
-    jobs = db.session.query(Job).all()
-    return render_template('view_all_jobs.html', title='Jobs', jobs=jobs)
-
-
-
-@app.route('/view_job/<int:job_id>', methods=['GET'])
-@login_required
-def view_job(job_id):
-    job = db.session.query(Job).get(job_id)
-    items = JobItems.query.filter_by(job_id=job_id).all()
-    customer = None
-    if job:
-        customer = db.session.query(Customer).get(job.customer_id)
-    return render_template('view_job.html', title='Jobs',items=items, subtitle="View Job", job=job, customer=customer)
-
-
-
-@app.route('/delete_job/<int:job_id>', methods=['POST'])
-@login_required
-def delete_job(job_id):
-    job = db.session.query(Job).filter(Job.id == job_id).first()
-    if job:
-        job.job_status = 'Cancelled'
-        db.session.commit()
-        flash('Job status updated to Cancelled!')
-    else:
-        flash('Job not found!', 'error')
-    return redirect(url_for('view_all_jobs'))
 
 
 

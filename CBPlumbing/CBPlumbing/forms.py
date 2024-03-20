@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, IntegerField, FloatField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField, IntegerField, FloatField, DateField, DateTimeField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
 import sqlalchemy as sa
 from CBPlumbing import db
@@ -47,12 +47,21 @@ class AddCustomerForm(FlaskForm):
     submit = SubmitField('Save')
     
 
-class JobForm(FlaskForm):
+class AddJobForm(FlaskForm):
+    customer_id = SelectField('Customer', coerce=int)
+    job_type = SelectField('Job Type', validators=[DataRequired()])  
+    job_planned_date = DateField('Job Planned Date')
+    job_notes = TextAreaField('Job Notes', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Save')
+    
+class EditJobForm(FlaskForm):
     customer_id = SelectField('Customer', coerce=int)
     job_status = SelectField('Job Status', validators=[DataRequired()])
     job_type = SelectField('Job Type', validators=[DataRequired()])
     job_notes = TextAreaField('Job Notes', validators=[Length(min=0, max=140)])
     invoice_status = SelectField('Invoice Status', validators=[DataRequired()])
+    job_planned_date = DateField('Job Planned Date')
+    job_completed_date = DateField('Job Completed Date')
     submit = SubmitField('Save')
     
 class JobItemForm(FlaskForm):

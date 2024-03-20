@@ -14,18 +14,22 @@
                 <th>{{ form.customer_id.label }}</th>
                 <th>{{ form.job_type.label }}</th>
                 <th>{{ form.job_status.label }}</th>
+                <th>{{ form.job_planned_date.label }}</th>
                 <th>{{ form.invoice_status.label }}</th>
+
             </tr>
             <tr>
                 <td>{{ form.customer_id }}</td>
                 <td>{{ form.job_type }}</td>
                 <td>{{ form.job_status }}</td>
+                <td>{{ form.job_planned_date }}</td>
                 <td>{{ form.invoice_status }}</td>
             </tr>
             <tr>
                 <td>{% for error in form.customer_id.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 <td>{% for error in form.job_type.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 <td>{% for error in form.job_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                <td>{% for error in form.job_planned_date.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 <td>{% for error in form.invoice_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
             </tr>
         </table>
@@ -62,8 +66,8 @@
             <td>{{ item.item_name }}</td>
             <td>{{ item.item_description }}</td>
             <td>{{ item.item_quantity }}</td>
-            <td>£{{ item.item_cost }}</td>
-            <td>£{{ item.item_total }}</td>
+            <td>£{{ '%.2f'|format(item.item_cost) }}</td>
+            <td>£{{ '%.2f'|format(item.item_total) }}</td>
             <td>
                 <div style="display: flex; gap: 5px;">
                     <a class="btn btn-primary" href="{{ url_for('edit_job_item', job_id=job.id, item_id=item.id) }} ">Edit &raquo;</a>
@@ -75,9 +79,23 @@
 
         </tr>
         {% endfor %}
+
+
     </table>
 
-    <a class="btn btn-primary" href="{{ url_for('add_job_item', job_id=job.id) }} ">Add Item &raquo;</a>
+    <p>
+        <a class="btn btn-primary" href="{{ url_for('add_job_item', job_id=job.id) }} ">Add Item &raquo;</a>
+    </p>
+    
+
+    <div>
+        <p>
+            <strong>Total Cost: £{{ '%.2f'|format(total_cost or 0) }}</strong>
+        </p>
+    </div>
+
+
+
 
 </div>
 

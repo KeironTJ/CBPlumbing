@@ -6,8 +6,45 @@
 
 
 
-<div class="title-card"> 
+<div class="title-card">
     <h3 class="title-card"> All Jobs</h3>
+
+    <div class="title-card">
+        <p>
+            <strong>Filter:</strong>
+        </p>
+        <form method="GET">
+            <label for="job_type">Job Type:</label>
+            <select name="job_type" id="job_type">
+                <option value="">All</option>
+                {% for type in job_type %}
+                <option value="{{ type }}" {% if type==selected_job_type %}selected{% endif %}>{{ type }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="job_status">Job Status:</label>
+            <select name="job_status" id="job_status">
+                <option value="">All</option>
+                {% for status in job_status %}
+                <option value="{{ status }}" {% if status==selected_job_status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="invoice_status">Invoice Status:</label>
+            <select name="invoice_status" id="invoice_status">
+                <option value="">All</option>
+                {% for status in invoice_status %}
+                <option value="{{ status }}" {% if status==selected_invoice_status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="submit" value="Filter" class="btn btn-primary">
+            <a href="{{ url_for('view_all_jobs') }}" class="btn btn-default">Reset Filters</a>
+
+        </form>
+
+    </div>
+
 
     <table class="table table-striped table-card">
         <thead>
@@ -15,7 +52,8 @@
                 <th>ID</th>
                 <th>Customer Name</th>
                 <th>Job Type</th>
-                <th>Job Notes</th>
+                <th>Planned Date</th>
+                <th>Total Cost</th>
                 <th>Job Status</th>
                 <th>Invoice Status</th>
                 <th>Action</th>
@@ -27,7 +65,8 @@
                 <td>{{ job.id}}</td>
                 <td>{{ job.customer.first_name}} {{ job.customer.last_name }}</td>
                 <td>{{ job.job_type }}</td>
-                <td>{{ job.job_notes }}</td>
+                <td>{{ job.job_planned_date.strftime('%d-%m-%Y') }}</td>
+                <td>&pound;{{ '%.2f'|format(job_costs[job.id] or 0) }}</td>
                 <td>{{ job.job_status }}</td>
                 <td>{{ job.invoice_status }}</td>
 

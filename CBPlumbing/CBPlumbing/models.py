@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.ext.hybrid import hybrid_property
+from datetime import datetime
 
 from CBPlumbing import db, login
 
@@ -41,10 +42,13 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     job_type = db.Column(db.String(120), index=True)
-    job_status = db.Column(db.String(120), index=True)
-    job_notes = db.Column(db.String(240), index=True)
-    invoice_status = db.Column(db.String(120), index=True)
+    job_status = db.Column(db.String(120), index=True, default="Open")
+    job_notes = db.Column(db.Text(240), index=True)
+    invoice_status = db.Column(db.String(120), index=True, default="Open")
     items = db.relationship('JobItems', backref='job', lazy='dynamic')
+    job_created_date = db.Column(db.DateTime, default=datetime.utcnow)
+    job_planned_date = db.Column(db.DateTime, nullable=True)
+    job_completed_date = db.Column(db.DateTime, nullable=True)
 
 class JobItems(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
