@@ -44,11 +44,12 @@ class Job(db.Model):
     job_type = db.Column(db.String(120), index=True)
     job_status = db.Column(db.String(120), index=True, default="Open")
     job_notes = db.Column(db.Text(240), index=True)
-    invoice_status = db.Column(db.String(120), index=True, default="Open")
+    invoice_status = db.Column(db.String(120), index=True, default="None")
     items = db.relationship('JobItems', backref='job', lazy='dynamic')
     job_created_date = db.Column(db.DateTime, default=datetime.utcnow)
     job_planned_date = db.Column(db.DateTime, nullable=True)
     job_completed_date = db.Column(db.DateTime, nullable=True)
+    invoices = db.relationship('Invoice', backref='job', lazy=True)
 
 class JobItems(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -63,6 +64,20 @@ class JobItems(db.Model):
     def item_total(self):
         return self.item_quantity * self.item_cost
     
+
+class Invoice(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    invoice_date = db.Column(db.DateTime, default=datetime.utcnow)
+    due_date = db.Column(db.DateTime)
+    status = db.Column(db.String(120), index=True, default="Active")
+    total_amount = db.Column(db.Float)
+
+    @hybrid_property
+    def total_amount(self):
+        return sum(item.item_total for item in self.job.items)
+    
+
     
 @login.user_loader
 def load_user(id):

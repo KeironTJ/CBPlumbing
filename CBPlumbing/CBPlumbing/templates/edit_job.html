@@ -15,7 +15,7 @@
                 <th>{{ form.job_type.label }}</th>
                 <th>{{ form.job_status.label }}</th>
                 <th>{{ form.job_planned_date.label }}</th>
-                <th>{{ form.invoice_status.label }}</th>
+                <th>Invoice Status</th>
 
             </tr>
             <tr>
@@ -23,14 +23,14 @@
                 <td>{{ form.job_type }}</td>
                 <td>{{ form.job_status }}</td>
                 <td>{{ form.job_planned_date }}</td>
-                <td>{{ form.invoice_status }}</td>
+                <td>{{ job.invoice_status }}</td>
             </tr>
             <tr>
                 <td>{% for error in form.customer_id.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 <td>{% for error in form.job_type.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 <td>{% for error in form.job_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
                 <td>{% for error in form.job_planned_date.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
-                <td>{% for error in form.invoice_status.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
+                
             </tr>
         </table>
 
@@ -43,6 +43,7 @@
             
             <a class="btn btn-default" href="{{ url_for('view_all_jobs') }}">&laquo; Back to Jobs</a>
             {{ form.submit(class_="btn btn-primary") }}
+            <a class="btn btn-primary" href="{{ url_for('add_invoice', job_id=job.id) }} ">Add Invoice &raquo;</a>
             
         </p>        
         

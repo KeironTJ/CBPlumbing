@@ -11,7 +11,7 @@ class Config(object):
 
 class QueryConfig(object):
     JOB_STATUS_LIST = ['Open', 'In Progress', 'Complete', 'Cancelled']
-    INVOICE_STATUS_LIST = ['Open', 'Issued', 'Paid', 'Cancelled']
+    INVOICE_STATUS_LIST = ['Active', 'Issued', 'Paid', 'Cancelled']
     CUSTOMER_STATUS_LIST = ['TRUE', 'FALSE']
     JOB_TYPE_LIST = ['Service', 'Warranty', 'Install', 'Repair', 'Other']
     JOB_PRIORITY_LIST = ['Low', 'Medium', 'High']

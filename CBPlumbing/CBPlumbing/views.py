@@ -8,8 +8,8 @@ from sqlalchemy.exc import IntegrityError
 import logging
 
 from CBPlumbing import app, db
-from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, AddJobForm, EditJobForm, JobItemForm
-from CBPlumbing.models import User, Customer, Job, JobItems
+from CBPlumbing.forms import LoginForm, RegistrationForm, AddCustomerForm, AddJobForm, EditJobForm, JobItemForm, InvoiceForm
+from CBPlumbing.models import User, Customer, Job, JobItems, Invoice
 from config import QueryConfig
 
 
@@ -88,6 +88,10 @@ def register():
 def dash():
     return render_template('dash.html', title='Dashboard')
 
+
+# Customer Routes
+
+
 @app.route('/add_customer', methods=['GET', 'POST'])
 @login_required
 def add_customer():
@@ -105,6 +109,7 @@ def add_customer():
         flash('Customer added successfully!')
         return redirect(url_for('view_all_customers'))
     return render_template('add_customer.html', title='Add Customer', form=form)
+
 
 @app.route('/edit_customer/<int:customer_id>', methods=['GET', 'POST'])
 @login_required
@@ -157,6 +162,7 @@ def view_customer(customer_id):
     return render_template('view_customer.html', title='Customers', subtitle="View Customer", customer=customer)
 
 
+# Job Routes
 
 @app.route('/add_job', methods=['GET', 'POST'])
 @login_required
@@ -233,9 +239,6 @@ def view_all_jobs():
 
 
 
-
-
-
 @app.route('/view_job/<int:job_id>', methods=['GET'])
 @login_required
 def view_job(job_id):
@@ -263,6 +266,7 @@ def delete_job(job_id):
     return redirect(url_for('view_all_jobs'))
 
 
+# Job Item Routes
 
 @app.route('/add_job_item/<int:job_id>', methods=['GET', 'POST'])
 @login_required
@@ -312,7 +316,62 @@ def delete_job_item(item_id):
     return redirect(url_for('edit_job', job_id=job_id))
 
 
+# Invoice Routes
 
+@app.route('/view_all_invoices')
+def view_all_invoices():
+    invoices = Invoice.query.all()
+    return render_template('view_all_invoices.html', title='View All Invoices', invoices=invoices)
+
+
+@app.route('/add_invoice/<int:job_id>', methods=['GET', 'POST'])
+def add_invoice(job_id):
+    job = Job.query.get(job_id)
+    if job is None:
+        flash('Job not found!', 'error')
+        return redirect(url_for('view_all_jobs'))
+    existing_invoice = Invoice.query.filter_by(job_id=job_id).first()
+    if existing_invoice:
+        flash('An invoice for this job already exists!', 'error')
+        return redirect(url_for('view_all_invoices'))
+    form = InvoiceForm()
+    form.job_id.data = job_id  # Auto-populate the job_id field
+    if form.validate_on_submit():
+        invoice = Invoice(
+            job_id=form.job_id.data,
+            due_date=form.due_date.data,
+            status=form.status.data
+        )
+        job.invoice_status = 'Issued'
+        db.session.add(invoice)
+        db.session.commit()
+        return redirect(url_for('view_all_invoices'))
+    return render_template('add_invoice.html', title='Add Invoice', form=form)
+
+
+
+
+
+@app.route('/view_invoice/<int:invoice_id>')
+def view_invoice(invoice_id):
+    invoice = Invoice.query.get_or_404(invoice_id)
+    return render_template('view_invoice.html', title='View Invoice', invoice=invoice)
+
+
+
+@app.route('/edit_invoice/<int:invoice_id>', methods=['GET', 'POST'])
+def edit_invoice(invoice_id):
+    invoice = Invoice.query.get_or_404(invoice_id)
+    form = InvoiceForm(obj=invoice)
+    if form.validate_on_submit():
+        form.populate_obj(invoice)
+        job = Job.query.get(invoice.job_id)  # Fetch the associated job
+        if job:
+            job.invoice_status = form.status.data  # Update the invoice_status field with form data
+        db.session.commit()
+        flash('Invoice updated successfully!')
+        return redirect(url_for('view_invoice', invoice_id=invoice_id))
+    return render_template('edit_invoice.html', title='Edit Invoice', form=form, invoice=invoice)
 
 
 

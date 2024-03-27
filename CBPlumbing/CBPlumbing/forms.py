@@ -5,6 +5,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Le
 import sqlalchemy as sa
 from CBPlumbing import db
 from CBPlumbing.models import User
+from config import QueryConfig
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -70,3 +71,9 @@ class JobItemForm(FlaskForm):
     item_quantity = IntegerField('Item Quantity', validators=[DataRequired()])
     item_cost = FloatField('Item Cost', validators=[DataRequired()])
     submit = SubmitField('Save')
+    
+
+class InvoiceForm(FlaskForm):
+    job_id = IntegerField('Job ID', validators=[DataRequired()])
+    due_date = DateField('Due Date', format='%Y-%m-%d', validators=[DataRequired()])
+    status = SelectField('Status', choices=[(type, type) for type in QueryConfig.INVOICE_STATUS_LIST])
