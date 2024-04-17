@@ -278,6 +278,9 @@ def delete_job(job_id):
 
 # Job Item Routes
 
+## Need to prevent users from adding job items to a cancelled or completed job
+
+
 @app.route('/add_job_item/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def add_job_item(job_id):
