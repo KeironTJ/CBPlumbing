@@ -1,4 +1,5 @@
 from datetime import datetime
+from email import message
 
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
@@ -195,6 +196,8 @@ def add_job():
 @login_required
 def edit_job(job_id):
     job = db.session.query(Job).get(job_id)
+    invoice = Invoice.query.filter_by(job_id=job.id).order_by(Invoice.invoice_date.desc()).first()
+    print(job.invoice_status, "1")
     if job is None:
         flash('Job not found!', 'error')
         return redirect(url_for('view_all_jobs'))
@@ -209,7 +212,7 @@ def edit_job(job_id):
         flash('Job updated successfully!')
         return redirect(url_for('view_job', job_id=job_id))
     total_cost = db.session.query(sa.func.sum(JobItems.item_total)).filter(JobItems.job_id == job_id).scalar()
-    return render_template('edit_job.html', form=form, title = 'Jobs',items=job.items, job=job, total_cost=total_cost, subtitle="Edit Job")
+    return render_template('edit_job.html', form=form, title = 'Jobs',items=job.items, job=job, total_cost=total_cost, subtitle="Edit Job", invoice=invoice)
 
 
 
@@ -243,13 +246,14 @@ def view_all_jobs():
 @login_required
 def view_job(job_id):
     job = db.session.query(Job).get(job_id)
+    invoice = Invoice.query.filter_by(job_id=job.id).order_by(Invoice.invoice_date.desc()).first()
     items = JobItems.query.filter_by(job_id=job_id).all()
     customer = None
     if job:
         customer = db.session.query(Customer).get(job.customer_id)
         
     total_cost = db.session.query(sa.func.sum(JobItems.item_total)).filter(JobItems.job_id == job_id).scalar()
-    return render_template('view_job.html', title='Jobs',items=items, total_cost=total_cost, subtitle="View Job", job=job, customer=customer)
+    return render_template('view_job.html', title='Jobs',items=items, total_cost=total_cost, subtitle="View Job", job=job, customer=customer, invoice=invoice)
 
 
 
@@ -258,12 +262,18 @@ def view_job(job_id):
 def delete_job(job_id):
     job = db.session.query(Job).filter(Job.id == job_id).first()
     if job:
-        job.job_status = 'Cancelled'
-        db.session.commit()
-        flash('Job status updated to Cancelled!')
+        invoice = Invoice.query.filter_by(job_id=job.id).first()
+        if invoice and invoice.status != 'Cancelled':
+            flash('Cannot cancel job with an active invoice!', 'error')
+            return redirect(url_for('edit_job', job_id=job_id))
+        else:
+            job.job_status = 'Cancelled'
+            db.session.commit()
+            flash('Job status updated to Cancelled!')
     else:
         flash('Job not found!', 'error')
     return redirect(url_for('view_all_jobs'))
+
 
 
 # Job Item Routes
@@ -343,6 +353,7 @@ def add_invoice(job_id):
             status=form.status.data
         )
         job.invoice_status = 'Issued'
+        invoice.status = "Issued"
         db.session.add(invoice)
         db.session.commit()
         return redirect(url_for('view_all_invoices'))
@@ -361,17 +372,36 @@ def view_invoice(invoice_id):
 
 @app.route('/edit_invoice/<int:invoice_id>', methods=['GET', 'POST'])
 def edit_invoice(invoice_id):
+    
     invoice = Invoice.query.get_or_404(invoice_id)
+    job = Job.query.get(invoice.job_id) 
     form = InvoiceForm(obj=invoice)
+    
     if form.validate_on_submit():
         form.populate_obj(invoice)
-        job = Job.query.get(invoice.job_id)  # Fetch the associated job
         if job:
-            job.invoice_status = form.status.data  # Update the invoice_status field with form data
+            if job.job_status != 'Complete':                
+                flash('Job must be completed before updating invoice status!', 'error')
+                return redirect(url_for('edit_invoice', invoice_id=invoice_id))
+            job.invoice_status = form.status.data
+            invoice.status = form.status.data
         db.session.commit()
         flash('Invoice updated successfully!')
         return redirect(url_for('view_invoice', invoice_id=invoice_id))
-    return render_template('edit_invoice.html', title='Edit Invoice', form=form, invoice=invoice)
+    return render_template('edit_invoice.html', title='Edit Invoice', form=form, invoice=invoice, job=job)
 
 
+@app.route('/delete_invoice/<int:invoice_id>', methods=['POST'])
+@login_required
+def delete_invoice(invoice_id):
+    invoice = db.session.query(Invoice).filter(Invoice.id == invoice_id).first()
+    job = Job.query.get(invoice.job_id)
+    if invoice:
+        invoice.status = 'Cancelled'
+        job.invoice_status = 'Cancelled'
+        db.session.commit()
+        flash('Invoice status updated to Cancelled!')
+    else:
+        flash('Invoice not found!', 'error')
+    return redirect(url_for('view_all_invoices'))
 

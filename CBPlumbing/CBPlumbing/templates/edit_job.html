@@ -23,7 +23,13 @@
                 <td>{{ form.job_type }}</td>
                 <td>{{ form.job_status }}</td>
                 <td>{{ form.job_planned_date }}</td>
-                <td>{{ job.invoice_status }}</td>
+                <td>
+                    {% if job.invoice_status != "None" %} 
+                    <a href="{{ url_for('view_invoice', invoice_id=invoice.id) }}">{{ invoice.id }} - {{ job.invoice_status }}</a>
+                    {% else %}
+                        {{ job.invoice_status }}
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>{% for error in form.customer_id.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}</td>
@@ -40,11 +46,13 @@
         </div>
 
         <p>
-            
+
             <a class="btn btn-default" href="{{ url_for('view_all_jobs') }}">&laquo; Back to Jobs</a>
             {{ form.submit(class_="btn btn-primary") }}
-            <a class="btn btn-primary" href="{{ url_for('add_invoice', job_id=job.id) }} ">Add Invoice &raquo;</a>
-            
+            {% if job.job_status == "Complete" %}
+                <a class="btn btn-primary" href="{{ url_for('add_invoice', job_id=job.id) }}">Add Invoice &raquo;</a>
+            {% endif %}
+
         </p>        
         
     </form>

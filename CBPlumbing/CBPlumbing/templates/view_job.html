@@ -21,7 +21,14 @@
             <td>{{ job.job_type }}</td>
             <td>{{ job.job_status }}</td>
             <td>{{ job.job_planned_date.strftime('%d-%m-%Y')  }}</td>
-            <td>{{ job.invoice_status }}</td>
+            <td>
+                {% if job.invoice_status != "None" and invoice %}
+                <a href="{{ url_for('view_invoice', invoice_id=invoice.id) }}">{{ invoice.id }} - {{ job.invoice_status }}</a>
+                {% else %}
+                    {{ job.invoice_status }}
+                {% endif %}
+            </td>
+
         </tr>
     </table>
     
