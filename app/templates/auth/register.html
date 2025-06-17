@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div  class="customdiv">
+    <h1>Register</h1>
+</div>
+
+<div class="customdiv">
+    <p class="customp">Please fill out the form below to register:</p>
+    <form class="customform" action="" method="post">
+        {{ form.hidden_tag() }}
+        <p class="customp">
+            {{ form.username.label }}<br>
+            {{ form.username(size=32, class="custominput") }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p class="customp">
+            {{ form.email.label }}<br>
+            {{ form.email(size=64, class="custominput") }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p class="customp">
+            {{ form.password.label }}<br>
+            {{ form.password(size=32, class="custominput") }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p class="customp">
+            {{ form.password2.label }}<br>
+            {{ form.password2(size=32, class="custominput") }}<br>
+            {% for error in form.password2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p class="customp">{{ form.submit(class="custombutton") }}</p>
+    </form>
+</div>
+{% endblock %}

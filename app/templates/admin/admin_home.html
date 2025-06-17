@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+<div class="customdiv">
+    <h1>Admin Home</h1>
+
+    <p class="customp">Welcome to the Admin Home Page!</p>
+
+    <a  href="{{ url_for('admin.admin_users') }}" class="btn btn-primary">View all users</a>
+    
+</div>
+
+
+
+{% endblock %}
